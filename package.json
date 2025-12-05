@@ -1,0 +1,15 @@
+{
+  "name": "free-apis-center",
+  "version": "1.0.0",
+  "description": "A collection of free APIs made by Painsel.",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "keywords": [],
+  "author": "Painsel",
+  "license": "ISC",
+  "dependencies": {
+    "vercel": "^49.1.0"
+  }
+}
