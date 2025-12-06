@@ -32,6 +32,40 @@
   }
 }</code></pre>
 
+        <p><strong>Method:</strong> <code>POST</code></p>
+        <p><strong>Description:</strong> Adds a new programming joke to the collection.</p>
+        <p><strong>Request Body:</strong></p>
+        <pre><code>{
+  "joke": "Your new programming joke here."
+}</code></pre>
+        <p><strong>Example Response (Success):</strong></p>
+        <pre><code>{
+  "success": true,
+  "timestamp": "2025-12-06T19:28:21.131Z",
+  "meta": {
+    "author": "Painsel",
+    "project": "Free APIs Center",
+    "github": "https://github.com/COURTESYCOIL/Free-API-Center"
+  },
+  "data": {
+    "message": "Joke added successfully!",
+    "joke": "Your new programming joke here."
+  }
+}</code></pre>
+        <p><strong>Example Response (Error):</strong></p>
+        <pre><code>{
+  "success": false,
+  "timestamp": "2025-12-06T19:28:21.131Z",
+  "meta": {
+    "author": "Painsel",
+    "project": "Free APIs Center",
+    "github": "https://github.com/COURTESYCOIL/Free-API-Center"
+  },
+  "data": {
+    "message": "Invalid joke provided."
+  }
+}</code></pre>
+
         <h3>Future POST Endpoints</h3>
         <p>This section will be updated as new POST endpoints are added to the Free API Center. Stay tuned for more interactive API functionalities!</p>
         <a href="/" class="back-to-dashboard">Back to Dashboard</a>

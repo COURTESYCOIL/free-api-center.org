@@ -18,6 +18,85 @@ document.addEventListener('DOMContentLoaded', () => {
         apiList.appendChild(apiCard);
     });
 
+    const submitJokeCard = document.createElement('div');
+    submitJokeCard.classList.add('api-card');
+    submitJokeCard.innerHTML = `
+        <h2>Submit a New Joke</h2>
+        <textarea id="new-joke-input" placeholder="Enter your joke here..."></textarea>
+        <button id="submit-joke-btn">Submit Joke</button>
+        <p class="joke-output" id="submit-joke-output"></p>
+    `;
+    apiList.appendChild(submitJokeCard);
+
+    // Links Section
+    const linksSection = document.createElement('div');
+    linksSection.classList.add('links-section');
+    linksSection.innerHTML = `
+        <h2>Links</h2>
+        <ul>
+            <li><a href="/wiki">Wiki Page</a></li>
+        </ul>
+    `;
+    apiList.appendChild(linksSection);
+
+    // Theme Switcher
+    const themeSwitcher = document.createElement('div');
+    themeSwitcher.classList.add('theme-switcher');
+    themeSwitcher.innerHTML = `
+        <button id="theme-toggle">Toggle Dark Mode</button>
+    `;
+    document.querySelector('.container').prepend(themeSwitcher); // Add to the top of the container
+
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+        document.body.classList.add(currentTheme);
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        let theme = 'light-mode';
+        if (document.body.classList.contains('dark-mode')) {
+            theme = 'dark-mode';
+        }
+        localStorage.setItem('theme', theme);
+    });
+
+    document.getElementById('submit-joke-btn').addEventListener('click', async () => {
+        const newJokeInput = document.getElementById('new-joke-input');
+        const joke = newJokeInput.value.trim();
+        const submitJokeOutput = document.getElementById('submit-joke-output');
+
+        if (!joke) {
+            submitJokeOutput.textContent = 'Please enter a joke.';
+            return;
+        }
+
+        submitJokeOutput.textContent = 'Submitting...';
+
+        try {
+            const response = await fetch('/api/v1/joke', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ joke }),
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                submitJokeOutput.textContent = `Success: ${data.message}`;
+                newJokeInput.value = ''; // Clear the input
+            } else {
+                submitJokeOutput.textContent = `Error: ${data.message || 'Failed to submit joke.'}`;
+            }
+        } catch (error) {
+            console.error('Error submitting joke:', error);
+            submitJokeOutput.textContent = 'Error submitting joke.';
+        }
+    });
+
     document.querySelectorAll('.fetch-joke-btn').forEach(button => {
         button.addEventListener('click', async (event) => {
             const endpoint = event.target.dataset.endpoint;
