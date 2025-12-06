@@ -274,13 +274,12 @@ fetch('/api/v1/chat/message', {
             const data = await response.json();
 
             if (data.success) {
-                createChatroomOutput.textContent = `Success: ${data.message} ID: ${data.data.id}`;
+                createChatroomOutput.textContent = `Success: ${data.data.message} ID: ${data.data.data.id}`;
                 newChatroomNameInput.value = ''; // Clear the input
                 // Show embed modal after successful creation
-                showEmbedModal(data.data.id);
+                showEmbedModal(data.data.data.id);
             } else {
-                createChatroomOutput.textContent = `Error: ${data.message || 'Failed to create chatroom.'}`;
-            }
+                createChatroomOutput.textContent = `Error: ${data.data.message || 'Failed to create chatroom.'}`;            }
         } catch (error) {
             console.error('Error creating chatroom:', error);
             createChatroomOutput.textContent = 'Error creating chatroom.';
