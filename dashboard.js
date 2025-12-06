@@ -1,21 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
     const apiList = document.getElementById('api-list');
 
-    const apis = [
-        { name: 'Joke API', description: 'Get a random programming joke.', endpoint: '/api/v1/joke' },
-        { name: 'Chat Username API', description: 'Get or set a chat username.', endpoint: '/api/v1/chat/username' },
-        { name: 'Chat Message API', description: 'Get or send chat messages.', endpoint: '/api/v1/chat/message' },
-        { name: 'Chat Profile Picture API', description: 'Get or set a chat profile picture.', endpoint: '/api/v1/chat/profile_picture' },
-        // Add more APIs here
+    // Split APIs into distinct sections
+    const jokeApis = [
+        { name: 'Joke API', description: 'Get a random programming joke.', endpoint: '/api/v1/joke', buttonText: 'Get Joke' }
     ];
 
-    apis.forEach(api => {
+    const chatApis = [
+        { name: 'Chat Username API', description: 'Get or set a chat username.', endpoint: '/api/v1/chat/username', buttonText: 'Get Data' },
+        { name: 'Chat Message API', description: 'Get or send chat messages.', endpoint: '/api/v1/chat/message', buttonText: 'Get Data' },
+        { name: 'Chat Profile Picture API', description: 'Get or set a chat profile picture.', endpoint: '/api/v1/chat/profile_picture', buttonText: 'Get Data' }
+    ];
+
+    // Joke API Section
+    const jokeSectionHeader = document.createElement('h2');
+    jokeSectionHeader.textContent = 'Joke API Section';
+    apiList.appendChild(jokeSectionHeader);
+
+    jokeApis.forEach(api => {
         const apiCard = document.createElement('div');
         apiCard.classList.add('api-card');
         apiCard.innerHTML = `
             <h2>${api.name}</h2>
             <p>${api.description}</p>
-            <button class="fetch-joke-btn" data-endpoint="${api.endpoint}">Get Joke</button>
+            <button class="fetch-joke-btn" data-endpoint="${api.endpoint}">${api.buttonText}</button>
+            <p class="joke-output" id="joke-${api.name.replace(/\s/g, '')}"></p>
+        `;
+        apiList.appendChild(apiCard);
+    });
+
+    // Chat API Section
+    const chatSectionHeader = document.createElement('h2');
+    chatSectionHeader.textContent = 'Chat API Section';
+    apiList.appendChild(chatSectionHeader);
+
+    chatApis.forEach(api => {
+        const apiCard = document.createElement('div');
+        apiCard.classList.add('api-card');
+        apiCard.innerHTML = `
+            <h2>${api.name}</h2>
+            <p>${api.description}</p>
+            <button class="fetch-joke-btn" data-endpoint="${api.endpoint}">${api.buttonText}</button>
             <p class="joke-output" id="joke-${api.name.replace(/\s/g, '')}"></p>
         `;
         apiList.appendChild(apiCard);
