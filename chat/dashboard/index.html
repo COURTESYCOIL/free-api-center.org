@@ -59,8 +59,8 @@
                 const response = await fetch('/api/v1/chatrooms');
                 const data = await response.json();
 
-                if (data.success && data.data.length > 0) {
-                    data.data.forEach(chatroom => {
+                if (data.success && data.data.data.length > 0) {
+                    data.data.data.forEach(chatroom => {
                         const listItem = document.createElement('li');
                         listItem.innerHTML = `<a href="/chat/dev?id=${chatroom.id}">${chatroom.name} (ID: ${chatroom.id})</a>`;
                         chatroomList.appendChild(listItem);
