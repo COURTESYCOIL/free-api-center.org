@@ -6,7 +6,7 @@ export const sendResponse = (res, data, statusCode = 200) => {
     meta: {
       author: "Painsel",
       project: "Free APIs Center",
-      github: "https://github.com/COURTESYCOIL/Free-API-Center"
+      github: "https://github.com/COURTESYCOIL/free-api-center.org"
     },
     data: data
   });
