@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Joke API Section
     const jokeSectionHeader = document.createElement('h2');
     jokeSectionHeader.textContent = 'Joke API Section';
+    jokeSectionHeader.id = 'joke-api-section'; // Add ID for navigation
     apiList.appendChild(jokeSectionHeader);
 
     jokeApis.forEach(api => {
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Chat API Section
     const chatSectionHeader = document.createElement('h2');
     chatSectionHeader.textContent = 'Chat API Section';
+    chatSectionHeader.id = 'chat-api-section'; // Add ID for navigation
     apiList.appendChild(chatSectionHeader);
 
     chatApis.forEach(api => {
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const submitJokeCard = document.createElement('div');
     submitJokeCard.classList.add('api-card');
+    submitJokeCard.id = 'submit-joke-section'; // Add ID for navigation
     submitJokeCard.innerHTML = `
         <h2>Submit a New Joke</h2>
         <textarea id="new-joke-input" placeholder="Enter your joke here..."></textarea>
@@ -101,6 +104,18 @@ fetch('/api/v1/chat/message', {
         <button id="theme-toggle">Toggle Dark Mode</button>
     `;
     document.querySelector('.container').prepend(themeSwitcher); // Add to the top of the container
+
+    // Section Navigation Bar
+    const navBar = document.createElement('nav');
+    navBar.classList.add('section-nav');
+    navBar.innerHTML = `
+        <a href="#joke-api-section">Joke API</a>
+        <a href="#chat-api-section">Chat API</a>
+        <a href="#submit-joke-section">Submit Joke</a>
+        <a href="#links-section">Links</a>
+        <a href="#chat-integration-section">Chat Integration</a>
+    `;
+    document.querySelector('.container').insertBefore(navBar, themeSwitcher.nextSibling);
 
     const themeToggleBtn = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme');
@@ -171,6 +186,16 @@ fetch('/api/v1/chat/message', {
                 console.error('Error fetching joke:', error);
                 jokeOutput.textContent = 'Error fetching joke.';
             }
+        });
+    });
+
+    document.querySelectorAll('.section-nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
         });
     });
 });
