@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const apis = [
         { name: 'Joke API', description: 'Get a random programming joke.', endpoint: '/api/v1/joke' },
+        { name: 'Chat Username API', description: 'Get or set a chat username.', endpoint: '/api/v1/chat/username' },
+        { name: 'Chat Message API', description: 'Get or send chat messages.', endpoint: '/api/v1/chat/message' },
+        { name: 'Chat Profile Picture API', description: 'Get or set a chat profile picture.', endpoint: '/api/v1/chat/profile_picture' },
         // Add more APIs here
     ];
 
@@ -38,6 +41,33 @@ document.addEventListener('DOMContentLoaded', () => {
         </ul>
     `;
     apiList.appendChild(linksSection);
+
+    // Chat Room Integration Section
+    const chatIntegrationSection = document.createElement('div');
+    chatIntegrationSection.classList.add('chat-integration-section');
+    chatIntegrationSection.innerHTML = `
+        <h2>Chat Room Integration</h2>
+        <p>You can integrate a chat room into your website using these APIs. Here's how:</p>
+        <pre><code>
+// Example: Fetching messages
+fetch('/api/v1/chat/message')
+    .then(response => response.json())
+    .then(data => console.log(data));
+
+// Example: Sending a message
+fetch('/api/v1/chat/message', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username: 'NewUser', message: 'Hello from my website!' }),
+})
+    .then(response => response.json())
+    .then(data => console.log(data));
+        </code></pre>
+        <p>Credits: This chat API was developed by Painsel for the Free APIs Center.</p>
+    `;
+    apiList.appendChild(chatIntegrationSection);
 
     // Theme Switcher
     const themeSwitcher = document.createElement('div');
