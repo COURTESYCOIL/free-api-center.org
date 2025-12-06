@@ -48,6 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
         apiList.appendChild(apiCard);
     });
 
+    // Create Chatroom Section
+    const createChatroomCard = document.createElement('div');
+    createChatroomCard.classList.add('api-card');
+    createChatroomCard.id = 'create-chatroom-section'; // Add ID for navigation
+    createChatroomCard.innerHTML = `
+        <h2>Create New Chatroom</h2>
+        <input type="text" id="new-chatroom-name-input" placeholder="Enter chatroom name...">
+        <button id="create-chatroom-btn">Create Chatroom</button>
+        <p class="chatroom-output" id="create-chatroom-output"></p>
+    `;
+    apiList.appendChild(createChatroomCard);
+
     const submitJokeCard = document.createElement('div');
     submitJokeCard.classList.add('api-card');
     submitJokeCard.id = 'submit-joke-section'; // Add ID for navigation
@@ -66,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h2>Links</h2>
         <ul>
             <li><a href="/wiki">Wiki Page</a></li>
+            <li><a href="/chat/dashboard">Chatroom Dashboard</a></li>
         </ul>
     `;
     apiList.appendChild(linksSection);
@@ -76,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chatIntegrationSection.innerHTML = `
         <h2>Chat Room Integration</h2>
         <p>You can integrate a chat room into your website using these APIs. Here's how:</p>
+        <button id="show-embed-modal-btn">Generate Embed Code</button>
         <pre><code>
 // Example: Fetching messages
 fetch('/api/v1/chat/message')
@@ -97,6 +111,75 @@ fetch('/api/v1/chat/message', {
     `;
     apiList.appendChild(chatIntegrationSection);
 
+    // Embed Modal HTML
+    const embedModal = document.createElement('div');
+    embedModal.id = 'embed-modal';
+    embedModal.classList.add('modal');
+    embedModal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Embed Chatroom</h2>
+            <p>Copy the iframe code below to embed your chatroom:</p>
+            <textarea id="embed-code-textarea" rows="5" readonly></textarea>
+            <button id="copy-embed-code-btn">Copy Code</button>
+        </div>
+    `;
+    document.body.appendChild(embedModal);
+
+    // Basic Modal Styling (add to style.css later or inline for now)
+    const modalStyle = document.createElement('style');
+    modalStyle.textContent = `
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 8px;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #embed-code-textarea {
+            width: 100%;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        #copy-embed-code-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #copy-embed-code-btn:hover {
+            background-color: #0056b3;
+        }
+    `;
+    document.head.appendChild(modalStyle);
+
     // Theme Switcher
     const themeSwitcher = document.createElement('div');
     themeSwitcher.classList.add('theme-switcher');
@@ -111,6 +194,7 @@ fetch('/api/v1/chat/message', {
     navBar.innerHTML = `
         <a href="#joke-api-section">Joke API</a>
         <a href="#chat-api-section">Chat API</a>
+        <a href="#create-chatroom-section">Create Chatroom</a>
         <a href="#submit-joke-section">Submit Joke</a>
         <a href="#links-section">Links</a>
         <a href="#chat-integration-section">Chat Integration</a>
@@ -165,6 +249,82 @@ fetch('/api/v1/chat/message', {
             console.error('Error submitting joke:', error);
             submitJokeOutput.textContent = 'Error submitting joke.';
         }
+    });
+
+    document.getElementById('create-chatroom-btn').addEventListener('click', async () => {
+        const newChatroomNameInput = document.getElementById('new-chatroom-name-input');
+        const chatroomName = newChatroomNameInput.value.trim();
+        const createChatroomOutput = document.getElementById('create-chatroom-output');
+
+        if (!chatroomName) {
+            createChatroomOutput.textContent = 'Please enter a chatroom name.';
+            return;
+        }
+
+        createChatroomOutput.textContent = 'Creating chatroom...';
+
+        try {
+            const response = await fetch('/api/v1/chatrooms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: chatroomName }),
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                createChatroomOutput.textContent = `Success: ${data.message} ID: ${data.data.id}`;
+                newChatroomNameInput.value = ''; // Clear the input
+                // Show embed modal after successful creation
+                showEmbedModal(data.data.id);
+            } else {
+                createChatroomOutput.textContent = `Error: ${data.message || 'Failed to create chatroom.'}`;
+            }
+        } catch (error) {
+            console.error('Error creating chatroom:', error);
+            createChatroomOutput.textContent = 'Error creating chatroom.';
+        }
+    });
+
+    // Embed Modal Logic
+    const embedModalElement = document.getElementById('embed-modal');
+    const closeButton = embedModalElement.querySelector('.close-button');
+    const showEmbedModalBtn = document.getElementById('show-embed-modal-btn');
+    const embedCodeTextarea = document.getElementById('embed-code-textarea');
+    const copyEmbedCodeBtn = document.getElementById('copy-embed-code-btn');
+
+    function showEmbedModal(chatroomId) {
+        const embedCode = `<iframe src="${window.location.origin}/chat/dev?id=${chatroomId}" width="600" height="400" frameborder="0"></iframe>`;
+        embedCodeTextarea.value = embedCode;
+        embedModalElement.style.display = 'block';
+    }
+
+    closeButton.addEventListener('click', () => {
+        embedModalElement.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == embedModalElement) {
+            embedModalElement.style.display = 'none';
+        }
+    });
+
+    showEmbedModalBtn.addEventListener('click', () => {
+        // For demonstration, let's assume a chatroom ID is available or prompt the user
+        // In a real app, you might fetch the last created ID or have a selection
+        const lastCreatedChatroomId = localStorage.getItem('lastCreatedChatroomId'); // Example
+        if (lastCreatedChatroomId) {
+            showEmbedModal(lastCreatedChatroomId);
+        } else {
+            alert('Please create a chatroom first to generate embed code.');
+        }
+    });
+
+    copyEmbedCodeBtn.addEventListener('click', () => {
+        embedCodeTextarea.select();
+        document.execCommand('copy');
+        alert('Embed code copied to clipboard!');
     });
 
     document.querySelectorAll('.fetch-joke-btn').forEach(button => {

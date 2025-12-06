@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Chatroom</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .chat-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #messages {
+            border: 1px solid #ddd;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: 8px;
+        }
+        .message strong {
+            color: #007bff;
+        }
+        #message-input {
+            width: calc(100% - 90px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        #send-button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Test Chatroom</h1>
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messagesDiv = document.getElementById('messages');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+
+            // Placeholder for chatroom ID - in a real scenario, this would come from the URL or be dynamically assigned
+            const chatroomId = 'test-chatroom-id'; 
+
+            // Function to fetch and display messages (placeholder)
+            async function fetchMessages() {
+                // In a real application, you would fetch messages for a specific chatroom ID
+                // For this test, we'll just display some static messages or messages sent locally
+                const staticMessages = [
+                    { username: 'System', message: 'Welcome to the test chatroom!' },
+                    { username: 'User1', message: 'Hello there!' }
+                ];
+                messagesDiv.innerHTML = '';
+                staticMessages.forEach(msg => {
+                    const p = document.createElement('p');
+                    p.classList.add('message');
+                    p.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+                    messagesDiv.appendChild(p);
+                });
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+            }
+
+            // Function to send a message (placeholder)
+            sendButton.addEventListener('click', () => {
+                const messageText = messageInput.value.trim();
+                if (messageText) {
+                    const p = document.createElement('p');
+                    p.classList.add('message');
+                    p.innerHTML = `<strong>You:</strong> ${messageText}`;
+                    messagesDiv.appendChild(p);
+                    messageInput.value = '';
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+
+                    // In a real application, you would send this message to your API
+                    console.log(`Sending message to chatroom ${chatroomId}: ${messageText}`);
+                }
+            });
+
+            // Initial load of messages
+            fetchMessages();
+        });
+    </script>
+</body>
+</html>

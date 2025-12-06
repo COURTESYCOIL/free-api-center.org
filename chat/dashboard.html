@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroom Dashboard</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .dashboard-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #chatroom-list {
+            list-style: none;
+            padding: 0;
+        }
+        #chatroom-list li {
+            background-color: #e9e9e9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #chatroom-list li:hover {
+            background-color: #dcdcdc;
+        }
+        #chatroom-list li a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Chatroom Dashboard</h1>
+        <p>Click on a chatroom ID to view the live chatroom.</p>
+        <ul id="chatroom-list">
+            <!-- Chatroom IDs will be loaded here -->
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const chatroomList = document.getElementById('chatroom-list');
+
+            try {
+                const response = await fetch('/api/v1/chatrooms');
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(chatroom => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<a href="/chat/dev?id=${chatroom.id}">${chatroom.name} (ID: ${chatroom.id})</a>`;
+                        chatroomList.appendChild(listItem);
+                    });
+                } else {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = 'No chatrooms available. Create one from the Dashboard!';
+                    chatroomList.appendChild(listItem);
+                }
+            } catch (error) {
+                console.error('Error fetching chatrooms:', error);
+                const listItem = document.createElement('li');
+                listItem.textContent = 'Error loading chatrooms.';
+                chatroomList.appendChild(listItem);
+            }
+        });
+    </script>
+</body>
+</html>
