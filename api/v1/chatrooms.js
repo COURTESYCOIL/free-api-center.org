@@ -249,16 +249,7 @@ export default async function handler(req, res) {
       return sendResponse(res, { message: 'Failed to create chatroom.' }, 500);
     }
   } else if (req.method === 'GET') {
-    const pathSegments = req.url.split('/').filter(Boolean);
-    let chatroomIdFromPath = null;
-    let isMessagesRequest = false;
 
-    if (pathSegments.length >= 4 && pathSegments[2] === 'chatrooms') {
-      chatroomIdFromPath = pathSegments[3];
-      if (pathSegments.length >= 5 && pathSegments[4] === 'messages') {
-        isMessagesRequest = true;
-      }
-    }
 
     const pathSegments = req.url.split('/').filter(Boolean);
     let chatroomIdFromPath = null;
