@@ -76,51 +76,56 @@ async function updateGitHubFile(filePath, content, message, sha) {
 }
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-      const { joke } = req.body;
+  try {
+    if (req.method === 'POST') {
+        const { joke } = req.body;
 
-      if (!joke || typeof joke !== 'string' || joke.trim() === '') {
-        return sendResponse(res, { message: 'Invalid joke provided.' }, 400);
-      }
-
-      const trimmedJoke = joke.trim();
-      try {
-        // Get current jokes from GitHub
-        const { jokes: currentJokes, sha } = await getJokesFromGitHub();
-
-        // Check for duplicate jokes (case-insensitive comparison)
-        const jokeExists = currentJokes.some(existingJoke => 
-          existingJoke.trim().toLowerCase() === trimmedJoke.toLowerCase()
-        );
-
-        if (jokeExists) {
-          return sendResponse(res, { message: 'Joke already exists in repository.' }, 409);
+        if (!joke || typeof joke !== 'string' || joke.trim() === '') {
+          return sendResponse(res, { message: 'Invalid joke provided.' }, 400);
         }
 
-        // Add new joke and update GitHub file
-        const updatedJokes = [...currentJokes, trimmedJoke];
-        if (sha) {
-          await updateGitHubFile(JOKES_FILE_PATH, updatedJokes, `Add new joke: ${trimmedJoke.slice(0, 30)}...`, sha);
-        } else {
-          await createGitHubFile(JOKES_FILE_PATH, updatedJokes, `Add new joke: ${trimmedJoke.slice(0, 30)}...`);
-        }
+        const trimmedJoke = joke.trim();
+        try {
+          // Get current jokes from GitHub
+          const { jokes: currentJokes, sha } = await getJokesFromGitHub();
 
-        return sendResponse(res, { message: 'Joke added to repository successfully!', joke: trimmedJoke }, 201);
-      } catch (error) {
-        console.error('Error adding joke to GitHub:', error);
-        return sendResponse(res, { message: 'Failed to add joke to repository.' }, 500);
+          // Check for duplicate jokes (case-insensitive comparison)
+          const jokeExists = currentJokes.some(existingJoke => 
+            existingJoke.trim().toLowerCase() === trimmedJoke.toLowerCase()
+          );
+
+          if (jokeExists) {
+            return sendResponse(res, { message: 'Joke already exists in repository.' }, 409);
+          }
+
+          // Add new joke and update GitHub file
+          const updatedJokes = [...currentJokes, trimmedJoke];
+          if (sha) {
+            await updateGitHubFile(JOKES_FILE_PATH, updatedJokes, `Add new joke: ${trimmedJoke.slice(0, 30)}...`, sha);
+          } else {
+            await createGitHubFile(JOKES_FILE_PATH, updatedJokes, `Add new joke: ${trimmedJoke.slice(0, 30)}...`);
+          }
+
+          return sendResponse(res, { message: 'Joke added to repository successfully!', joke: trimmedJoke }, 201);
+        } catch (error) {
+          console.error('Error adding joke to GitHub:', error);
+          return sendResponse(res, { message: 'Failed to add joke to repository.' }, 500);
+        }
+      } else if (req.method === 'GET') {
+        try {
+          // Get current jokes from GitHub
+          const { jokes: currentJokes } = await getJokesFromGitHub();
+          const randomJoke = currentJokes[Math.floor(Math.random() * currentJokes.length)];
+          return sendResponse(res, { joke: randomJoke });
+        } catch (error) {
+          console.error('Error fetching joke from GitHub:', error);
+          return sendResponse(res, { message: 'Failed to fetch joke from repository.' }, 500);
+        }
+      } else {
+        return sendResponse(res, { message: 'Method Not Allowed' }, 405);
       }
-    } else if (req.method === 'GET') {
-      try {
-        // Get current jokes from GitHub
-        const { jokes: currentJokes } = await getJokesFromGitHub();
-        const randomJoke = currentJokes[Math.floor(Math.random() * currentJokes.length)];
-        return sendResponse(res, { joke: randomJoke });
-      } catch (error) {
-        console.error('Error fetching joke from GitHub:', error);
-        return sendResponse(res, { message: 'Failed to fetch joke from repository.' }, 500);
-      }
-    } else {
-      return sendResponse(res, { message: 'Method Not Allowed' }, 405);
-    }
+  } catch (error) {
+    console.error('Unhandled error in joke API:', error);
+    return sendResponse(res, { message: 'An unexpected server error occurred.' }, 500);
+  }
 }
