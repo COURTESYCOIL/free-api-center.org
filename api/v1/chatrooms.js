@@ -117,7 +117,18 @@ export default async function handler(req, res) {
       }
     }
 
-    const id = req.query.id || chatroomIdFromPath;
+    const pathSegments = req.url.split('/').filter(Boolean);
+    let chatroomIdFromPath = null;
+    let isMessagesRequest = false;
+
+    if (pathSegments.length >= 4 && pathSegments[2] === 'chatrooms') {
+      chatroomIdFromPath = pathSegments[3];
+      if (pathSegments.length >= 5 && pathSegments[4] === 'messages') {
+        isMessagesRequest = true;
+      }
+    }
+
+    const id = chatroomIdFromPath; // Prioritize path ID
 
     if (id) {
       const filePath = `${CHATROOMS_DIR}/${id}.json`;
