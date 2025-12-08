@@ -1,0 +1,35 @@
+{
+  "pages": {
+    "/": [
+      "static/chunks/1adccc83d8e1fa18.js",
+      "static/chunks/4d421a691389d6d2.js",
+      "static/chunks/83e9fda9c56948e6.js",
+      "static/chunks/turbopack-3c7c10ef6baa9eab.js"
+    ],
+    "/_app": [
+      "static/chunks/cac926d91f218ae1.js",
+      "static/chunks/4d421a691389d6d2.js",
+      "static/chunks/83e9fda9c56948e6.js",
+      "static/chunks/turbopack-8f1ecf6a7ec359f1.js"
+    ],
+    "/_error": [
+      "static/chunks/674df36e875d27da.js",
+      "static/chunks/4d421a691389d6d2.js",
+      "static/chunks/83e9fda9c56948e6.js",
+      "static/chunks/turbopack-7c43f104e21ccfbd.js"
+    ],
+    "/joke-api/v1": [
+      "static/chunks/5cfa75a3e3f08e70.js",
+      "static/chunks/4d421a691389d6d2.js",
+      "static/chunks/83e9fda9c56948e6.js",
+      "static/chunks/turbopack-99c56710d5b4c6e0.js"
+    ]
+  },
+  "devFiles": [],
+  "polyfillFiles": [],
+  "lowPriorityFiles": [
+    "static/CYq-fQ4sdSfGiPDScCZP9/_ssgManifest.js",
+    "static/CYq-fQ4sdSfGiPDScCZP9/_buildManifest.js"
+  ],
+  "rootMainFiles": []
+}

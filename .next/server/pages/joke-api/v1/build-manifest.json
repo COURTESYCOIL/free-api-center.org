@@ -1,0 +1,16 @@
+{
+  "devFiles": [],
+  "ampDevFiles": [],
+  "polyfillFiles": [],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [],
+  "pages": {
+    "/joke-api/v1": [
+      "static/chunks/5cfa75a3e3f08e70.js",
+      "static/chunks/4d421a691389d6d2.js",
+      "static/chunks/83e9fda9c56948e6.js",
+      "static/chunks/turbopack-99c56710d5b4c6e0.js"
+    ]
+  },
+  "ampFirstPages": []
+}
